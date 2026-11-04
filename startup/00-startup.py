@@ -44,10 +44,10 @@ db = tiled_inserter = TiledInserter(tiled_writing_client,
     "tes",
     backup_directory=f"{TILED_BACKUP_ROOT}/raw")
 tiled_inserter = BufferingWrapper(tiled_inserter)   # in-process queue: RE never blocks
-RE.subscribe(tiled_inserter)
 
 configure_base(get_ipython().user_ns,
                publish_documents_with_kafka=False)
+RE.subscribe(tiled_inserter)
 
 # TODO: This is a workaround, remove this once nslsii is fixed. See: https://github.com/NSLS-II/nslsii/issues/207
 configure_kafka_publisher(RE, "tes")
