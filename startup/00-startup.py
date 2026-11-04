@@ -40,13 +40,13 @@ ip.prompts = ProposalIDPrompt(ip)
 tiled_writing_client = from_profile("nsls2", api_key=os.environ["TILED_BLUESKY_WRITING_API_KEY_TES"])["tes"]["raw"]
 tiled_writing_client.context.http_client.headers['tiled-qos'] = 'acquisition'
 
-tiled_inserter = TiledInserter(tiled_writing_client,
+db = tiled_inserter = TiledInserter(tiled_writing_client,
     "tes",
     backup_directory=f"{TILED_BACKUP_ROOT}/raw")
 tiled_inserter = BufferingWrapper(tiled_inserter)   # in-process queue: RE never blocks
+RE.subscribe(tiled_inserter)
 
 configure_base(get_ipython().user_ns,
-               tiled_inserter,
                publish_documents_with_kafka=False)
 
 # TODO: This is a workaround, remove this once nslsii is fixed. See: https://github.com/NSLS-II/nslsii/issues/207
